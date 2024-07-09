@@ -8,10 +8,19 @@ class HousesService {
     }
 
     async searchHouses(searchQuery) {
-        let houses = await dbContext.Houses.find(searchQuery)
-        let total = await dbContext.Houses.countDocuments()
+
+        let limitNum = searchQuery.limit ? searchQuery.limit : 5
+        delete searchQuery.limit
+
+        let pageNum = searchQuery.page ? searchQuery.page - 1 : 0
+        delete searchQuery.page 
+
+        let houses = await dbContext.Houses.find(searchQuery).limit(limitNum).skip(pageNum * 5)
+        let total = await dbContext.Houses.countDocuments(searchQuery)
         return{
+            page: `${(pageNum + 1)} out of ${Math.ceil(total / 5)}`,
             totalResults: total,
+            limit: limitNum,
             results: houses
         }
     }
