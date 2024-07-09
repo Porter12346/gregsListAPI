@@ -2,14 +2,18 @@ import { dbContext } from "../db/DbContext.js"
 
 class HousesService {
 
-    getAllHouses() {
-        let houses = dbContext.Houses.find()
+    async getAllHouses() {
+        let houses = await dbContext.Houses.find()
         return houses
     }
 
-    searchHouses(searchQuery) {
-        let houses = dbContext.Houses.find(searchQuery)
-        
+    async searchHouses(searchQuery) {
+        let houses = await dbContext.Houses.find(searchQuery)
+        let total = await dbContext.Houses.countDocuments()
+        return{
+            totalResults: total,
+            results: houses
+        }
     }
 }
 

@@ -22,6 +22,7 @@ export class HousesController extends BaseController {
         try {
             let searchQuery = request.query
             const houses = await housesService.searchHouses(searchQuery)
+            response.send(houses)
         } catch (error) {
             next(error)
         }
